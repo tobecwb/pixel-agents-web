@@ -298,6 +298,7 @@ function App() {
           agentStatuses={agentStatuses}
           subagentTools={subagentTools}
           onSelectAgent={handleSelectAgent}
+          onClose={() => setIsDebugMode(false)}
         />
       )}
     </div>

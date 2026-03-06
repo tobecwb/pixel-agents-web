@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { ToolActivity } from '../office/types.js'
 import { vscode } from '../vscodeApi.js'
 
@@ -8,6 +9,7 @@ interface DebugViewProps {
   agentStatuses: Record<number, string>
   subagentTools: Record<number, Record<string, ToolActivity[]>>
   onSelectAgent: (id: number) => void
+  onClose: () => void
 }
 
 /** Z-index just below the floating toolbar (50) so the toolbar stays on top */
@@ -57,13 +59,17 @@ export function DebugView({
   agentStatuses,
   subagentTools,
   onSelectAgent,
+  onClose,
 }: DebugViewProps) {
+  const [confirmCloseId, setConfirmCloseId] = useState<number | null>(null)
+
   const renderAgentCard = (id: number) => {
     const isSelected = selectedAgent === id
     const tools = agentTools[id] || []
     const subs = subagentTools[id] || {}
     const status = agentStatuses[id]
     const hasActiveTools = tools.some((t) => !t.done)
+    const isConfirming = confirmCloseId === id
     return (
       <div
         key={id}
@@ -88,20 +94,46 @@ export function DebugView({
           >
             Agent #{id}
           </button>
-          <button
-            onClick={() => vscode.postMessage({ type: 'closeAgent', id })}
-            style={{
-              borderRadius: 0,
-              padding: '6px 8px',
-              fontSize: '26px',
-              opacity: 0.7,
-              background: isSelected ? 'rgba(90, 140, 255, 0.25)' : undefined,
-              color: isSelected ? '#fff' : undefined,
-            }}
-            title="Close agent"
-          >
-            ✕
-          </button>
+          {isConfirming ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginLeft: 4 }}>
+              <span style={{ fontSize: '22px', color: '#cca700' }}>Remove?</span>
+              <button
+                onClick={() => { setConfirmCloseId(null); vscode.postMessage({ type: 'closeAgent', id }) }}
+                style={{
+                  borderRadius: 0,
+                  padding: '4px 8px',
+                  fontSize: '22px',
+                  background: 'rgba(204, 50, 50, 0.4)',
+                  color: '#fff',
+                }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setConfirmCloseId(null)}
+                style={{
+                  borderRadius: 0,
+                  padding: '4px 8px',
+                  fontSize: '22px',
+                }}
+              >
+                No
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={() => setConfirmCloseId(id)}
+              style={{
+                borderRadius: 0,
+                padding: '6px 8px',
+                fontSize: '22px',
+                opacity: 0.4,
+              }}
+              title="Remove agent"
+            >
+              ✕
+            </button>
+          )}
         </span>
         {(tools.length > 0 || status === 'waiting') && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1, marginTop: 4, paddingLeft: 4 }}>
@@ -169,8 +201,23 @@ export function DebugView({
         overflow: 'auto',
       }}
     >
-      {/* Top padding so cards don't overlap the floating toolbar */}
       <div style={{ padding: '12px 12px 12px', fontSize: '28px', color: '#e0e0e0' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <span style={{ fontSize: '26px', opacity: 0.7 }}>Debug View</span>
+          <button
+            onClick={onClose}
+            style={{
+              borderRadius: 0,
+              padding: '4px 12px',
+              fontSize: '24px',
+              background: 'var(--pixel-btn-bg)',
+              color: 'var(--pixel-text-dim)',
+              border: '2px solid var(--pixel-border)',
+            }}
+          >
+            Close
+          </button>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {agents.map(renderAgentCard)}
         </div>
