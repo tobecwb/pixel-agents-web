@@ -39,7 +39,7 @@ cd pixel-agents-web
 ./pixel-agents.sh
 ```
 
-This builds the project, starts the server, and opens your browser automatically.
+The `install` command installs dependencies and builds the project. Then `start` (the default) runs the server and opens your browser.
 
 ### Global Install (optional)
 
@@ -50,7 +50,7 @@ ln -s "$(pwd)/pixel-agents.sh" /usr/local/bin/pixel-agents
 Then from any project directory:
 
 ```bash
-pixel-agents            # build + start server + open browser
+pixel-agents            # start server + open browser
 pixel-agents dev        # dev server with hot reload
 pixel-agents build      # build without starting
 pixel-agents install    # install all dependencies

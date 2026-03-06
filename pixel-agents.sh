@@ -17,14 +17,19 @@ case "${1:-start}" in
     (cd "$DIR" && npm install)
     (cd "$DIR/server" && npm install)
     (cd "$DIR/webview-ui" && npm install)
+    echo "Building..."
+    (cd "$DIR" && npm run build:server)
     ;;
   build)
     echo "Building..."
     (cd "$DIR" && npm run build:server)
     ;;
   start)
-    echo "Building and starting Pixel Agents..."
-    (cd "$DIR" && npm run build:server)
+    if [ ! -f "$DIR/server/dist/index.cjs" ]; then
+      echo "Server not built yet. Run './pixel-agents.sh install' first."
+      exit 1
+    fi
+    echo "Starting Pixel Agents..."
     node "$DIR/server/dist/index.cjs" --open "${@:2}"
     ;;
   dev)
