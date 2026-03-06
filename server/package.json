@@ -1,0 +1,24 @@
+{
+  "name": "pixel-agents-web",
+  "version": "1.0.0",
+  "description": "Standalone web server for Pixel Agents - pixel art office for Claude Code agents",
+  "type": "module",
+  "bin": {
+    "pixel-agents": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build": "node esbuild.cjs",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0",
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.x",
+    "@types/ws": "^8.5.13",
+    "@types/pngjs": "^6.0.5",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -7,3 +7,7 @@ node_modules
 /logs
 /sprites-export
 .env
+.idea/
+pnpm-lock.yaml
+server/dist/
+office_tileset_16x16.png
