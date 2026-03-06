@@ -50,10 +50,10 @@ ln -s "$(pwd)/pixel-agents.sh" /usr/local/bin/pixel-agents
 Then from any project directory:
 
 ```bash
-pixel-agents            # start server + open browser
+pixel-agents            # start server + open browser (no rebuild)
+pixel-agents build      # rebuild server and webview
+pixel-agents install    # install dependencies + build
 pixel-agents dev        # dev server with hot reload
-pixel-agents build      # build without starting
-pixel-agents install    # install all dependencies
 ```
 
 ### Manual Usage
