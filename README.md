@@ -34,14 +34,29 @@ Forked from [Pixel Agents](https://github.com/pablodelucca/pixel-agents) (VS Cod
 
 ```bash
 git clone https://github.com/tobe81cwb/pixel-agents-web.git
-cd pixel-agents
-npm install
-cd webview-ui && npm install && cd ..
-cd server && npm install && cd ..
-npm run build:server
+cd pixel-agents-web
+./pixel-agents.sh install
+./pixel-agents.sh
 ```
 
-## Usage
+This builds the project, starts the server, and opens your browser automatically.
+
+### Global Install (optional)
+
+```bash
+ln -s "$(pwd)/pixel-agents.sh" /usr/local/bin/pixel-agents
+```
+
+Then from any project directory:
+
+```bash
+pixel-agents            # build + start server + open browser
+pixel-agents dev        # dev server with hot reload
+pixel-agents build      # build without starting
+pixel-agents install    # install all dependencies
+```
+
+### Manual Usage
 
 ```bash
 # Start the server from your project directory
@@ -52,7 +67,9 @@ node /path/to/pixel-agents-web/server/dist/index.cjs
 node /path/to/pixel-agents-web/server/dist/index.cjs --port 3000 --open
 ```
 
-1. Open `http://localhost:3000` in your browser
+### Using It
+
+1. Open `http://localhost:3000` in your browser (or use `--open` to auto-open)
 2. Start Claude Code in the same project directory — agents appear automatically
 3. Click a character to follow it with the camera
 4. Click **Layout** to edit the office

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const production = process.argv.includes('--production');
+const watch = process.argv.includes('--watch');
 
 function copyDir(src, dst) {
   if (!fs.existsSync(src)) return false;
@@ -14,8 +15,7 @@ function copyDir(src, dst) {
 }
 
 async function main() {
-  // Bundle server
-  await esbuild.build({
+  const buildOptions = {
     entryPoints: ['src/index.ts'],
     bundle: true,
     format: 'cjs',
@@ -28,8 +28,16 @@ async function main() {
     banner: {
       js: '#!/usr/bin/env node',
     },
-  });
-  console.log('✓ Server bundled → dist/index.cjs');
+  };
+
+  if (watch) {
+    const ctx = await esbuild.context(buildOptions);
+    await ctx.watch();
+    console.log('✓ Server watching for changes...');
+  } else {
+    await esbuild.build(buildOptions);
+    console.log('✓ Server bundled → dist/index.cjs');
+  }
 
   // Copy assets
   const assetsSrc = path.join(__dirname, '..', 'webview-ui', 'public', 'assets');
